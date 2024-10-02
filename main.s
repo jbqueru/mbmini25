@@ -59,6 +59,7 @@
 
 	.68000
 	.include	"defines.s"	; Start with the ST defines
+	.include	"params.s"	; Add the global parameters
 
 	.bss
 MainBssStart:				; Beginning of the BSS - clear starting from that address
@@ -73,7 +74,7 @@ MainBssStart:				; Beginning of the BSS - clear starting from that address
 ; #######################################
 ; #######################################
 
-MainUser:	pea.l	.MainSuper
+MainUser:	pea.l	.MainSuper.l
 		move.w	#XBIOS_SUPEXEC, -(sp)
 		trap	#XBIOS_TRAP
 		addq.l	#6, sp
@@ -89,10 +90,10 @@ MainUser:	pea.l	.MainSuper
 ; ###########################################
 ; ###########################################
 
-.MainSuper:	bsr	MainBSSClear
-		bsr	StackSetup
-		bsr	MM24Entry
-		bsr	StackRestore
+.MainSuper:	bsr.w	MainBSSClear
+		bsr.w	StackSetup
+		bsr.w	MM24Entry
+		bsr.w	StackRestore
 		rts
 
 ; ###################
@@ -103,7 +104,9 @@ MainUser:	pea.l	.MainSuper
 ; ###################
 ; ###################
 
-MainBSSClear:	lea.l	MainBssStart, a0
+; TODO: optimize. Or eliminate entirely, TBD.
+
+MainBSSClear:	lea.l	MainBssStart.l, a0
 .Loop:		clr.b	(a0)+
 		cmpa.l	#MainBssEnd, a0
 		bne.s	.Loop

@@ -28,64 +28,10 @@
 ; #############################################################################
 ; ###                                                                       ###
 ; ###                                                                       ###
-; ###                              Stack setup                              ###
+; ###                         Modifiable parameters                         ###
 ; ###                                                                       ###
 ; ###                                                                       ###
 ; #############################################################################
 ; #############################################################################
 
-STACK_GUARD	equ	$adfacade
-
-	.text
-
-; ##########################
-; ##########################
-; ###                    ###
-; ###  Set up the stack  ###
-; ###                    ###
-; ##########################
-; ##########################
-
-; WARNING: must be called from the top level, can't be called from a subroutine
-; WARNING: stack content is gone until the stack is restored
-
-StackSetup:	move.w	sr, stack_sr_save.l
-		move.w	#$2700, sr
-
-		move.l	usp, a0
-		move.l	a0, stack_usp_save.l
-
-		move.l	(sp)+, a6		; pop the return address from the old stack
-		move.l	sp, stack_ssp_save.l
-		move.l	#STACK_GUARD, stack.l
-		lea.l	stack_end.l, sp
-		jmp	(a6)			; this replaces rts - we've popped the return address into a6
-
-; ###########################
-; ###########################
-; ###                     ###
-; ###  Restore the stack  ###
-; ###                     ###
-; ###########################
-; ###########################
-
-; WARNING: must be called from the top level, can't be called from a subroutine
-; WARNING: stack content isn't preserved across this call
-
-StackRestore:	move.w	#$2700, sr
-		cmpi.l	#STACK_GUARD, stack.l
-.StackOverflow:	bne.s	.StackOverflow
-		move.l	(sp)+, a6		; pop the return address from the old stack
-		move.l	stack_ssp_save.l, sp
-		move.l	stack_usp_save.l, a0
-		move.l	a0, usp
-		move.w	stack_sr_save.l, sr
-		jmp	(a6)			; this replaces rts - we've popped the return address into a6
-
-	.bss
-stack_sr_save:	.ds.w	1
-stack_usp_save:	.ds.l	1
-stack_ssp_save:	.ds.l	1
-
-stack:		.ds.l	STACK_SIZE
-stack_end:
+STACK_SIZE      equ     256             ; in long words
