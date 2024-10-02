@@ -28,18 +28,27 @@
 ; #############################################################################
 ; ###                                                                       ###
 ; ###                                                                       ###
-; ###                     Atari ST constant definitions                     ###
+; ###                            Interrupt setup                            ###
 ; ###                                                                       ###
 ; ###                                                                       ###
 ; #############################################################################
 ; #############################################################################
 
-_GEMDOS_TERM0	equ	0
+	.text
 
-_GEMDOS_TRAP	equ	1
+IrqSetup:	move.w	sr, irq_sr_save.l
+		move.w	#$2700, sr
+		move.l	_VECTOR_VBL.w, irq_vbl_save.l
+		move.l	#IrqVblEmpty, _VECTOR_VBL.w
+		rts
 
-_XBIOS_SUPEXEC	equ	38
+IrqRestore:	move.l	irq_vbl_save.l, _VECTOR_VBL.w
+		move.w	irq_sr_save.l, sr
+		rts
 
-_XBIOS_TRAP	equ	14
+IrqVblEmpty:	rte
 
-_VECTOR_VBL	equ	$70
+	.bss
+
+irq_sr_save:	.ds.w	1
+irq_vbl_save:	.ds.l	1

@@ -49,10 +49,7 @@ STACK_GUARD	equ	$adfacade
 ; WARNING: must be called from the top level, can't be called from a subroutine
 ; WARNING: stack content is gone until the stack is restored
 
-StackSetup:	move.w	sr, stack_sr_save.l
-		move.w	#$2700, sr
-
-		move.l	usp, a0
+StackSetup:	move.l	usp, a0
 		move.l	a0, stack_usp_save.l
 
 		move.l	(sp)+, a6		; pop the return address from the old stack
@@ -79,13 +76,11 @@ StackRestore:	move.w	#$2700, sr
 		move.l	stack_ssp_save.l, sp
 		move.l	stack_usp_save.l, a0
 		move.l	a0, usp
-		move.w	stack_sr_save.l, sr
 		jmp	(a6)			; this replaces rts - we've popped the return address into a6
 
 	.bss
-stack_sr_save:	.ds.w	1
 stack_usp_save:	.ds.l	1
 stack_ssp_save:	.ds.l	1
 
-stack:		.ds.l	STACK_SIZE
+stack:		.ds.l	_STACK_SIZE
 stack_end:

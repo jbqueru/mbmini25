@@ -75,12 +75,12 @@ MainBssStart:				; Beginning of the BSS - clear starting from that address
 ; #######################################
 
 MainUser:	pea.l	.MainSuper.l
-		move.w	#XBIOS_SUPEXEC, -(sp)
-		trap	#XBIOS_TRAP
+		move.w	#_XBIOS_SUPEXEC, -(sp)
+		trap	#_XBIOS_TRAP
 		addq.l	#6, sp
 
-		move.w	#GEMDOS_TERM0, -(sp)
-		trap	#GEMDOS_TRAP
+		move.w	#_GEMDOS_TERM0, -(sp)
+		trap	#_GEMDOS_TRAP
 
 ; ###########################################
 ; ###########################################
@@ -91,9 +91,11 @@ MainUser:	pea.l	.MainSuper.l
 ; ###########################################
 
 .MainSuper:	bsr.w	MainBSSClear
+		bsr.w	IrqSetup
 		bsr.w	StackSetup
 		bsr.w	MM24Entry
 		bsr.w	StackRestore
+		bsr.w	IrqRestore
 		rts
 
 ; ###################
@@ -120,6 +122,7 @@ MainBSSClear:	lea.l	MainBssStart.l, a0
 ; #########################
 ; #########################
 
+	.include	"irq.s"
 	.include	"stack.s"	; Stack and interrupt setup
 
 ; ###########################
