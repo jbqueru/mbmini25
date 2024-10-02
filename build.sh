@@ -27,7 +27,7 @@ mkdir -p out/bin
 mkdir -p out/inc
 mkdir -p out/tos
 
-~/code/rmac/rmac -s -p -4 mbmini24.s -o out/tos/MBMINI24.PRG
+~/code/rmac/rmac -s -p -4 main.s -o out/tos/MBMINI24.PRG
 chmod 664 out/tos/MBMINI24.PRG
 
 rm -rf out/mbmini24

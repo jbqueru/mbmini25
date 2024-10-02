@@ -47,5 +47,20 @@
 ;		cause confusion. E.g. use movea instead of move on 680x0 when
 ;		the code relies on the flags not getting modified.
 
-	.text
-MM24Entry:	rts
+; #############################################################################
+; #############################################################################
+; ###                                                                       ###
+; ###                                                                       ###
+; ###                     Atari ST constant definitions                     ###
+; ###                                                                       ###
+; ###                                                                       ###
+; #############################################################################
+; #############################################################################
+
+GEMDOS_TERM0	equ	0
+
+GEMDOS_TRAP	equ	1
+
+XBIOS_SUPEXEC	equ	38
+
+XBIOS_TRAP	equ	14
