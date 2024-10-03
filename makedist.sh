@@ -23,7 +23,10 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-echo Did you remember to copy the executable to the floppy image\?
+if test $(stat -c %s out/mbmini24/mbmini24.msa) -eq 1025 ; then
+        echo Did you forget to copy the executable to the floppy image\? ;
+fi
+
 rm -rf out/dist
 mkdir -p out/dist
 (cd out && zip -9 -q dist/mbmini24.zip mbmini24/*)

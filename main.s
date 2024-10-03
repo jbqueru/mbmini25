@@ -90,12 +90,12 @@ MainUser:	pea.l	.MainSuper.l
 ; ###########################################
 ; ###########################################
 
-.MainSuper:	bsr.w	MainBSSClear
-		bsr.w	IrqSetup
-		bsr.w	StackSetup
+.MainSuper:	bsr.s	MainBSSClear
+		bsr.s	IrqSetup
+		bsr.s	StackSetup
 		bsr.w	MM24Entry
-		bsr.w	StackRestore
-		bsr.w	IrqRestore
+		bsr.s	StackRestore
+		bsr.s	IrqRestore
 		rts
 
 ; ###################

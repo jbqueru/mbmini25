@@ -27,7 +27,10 @@ mkdir -p out/bin
 mkdir -p out/inc
 mkdir -p out/tos
 
-~/code/rmac/rmac -s -p -4 main.s -o out/tos/MBMINI24.PRG
+cc bitmaps_convert.c -o out/bin/bitmaps_convert
+out/bin/bitmaps_convert
+
+rmac -s -p -4 main.s -o out/tos/MBMINI24.PRG
 chmod 664 out/tos/MBMINI24.PRG
 
 rm -rf out/mbmini24
@@ -37,4 +40,9 @@ cp LICENSE LICENSE_ASSETS AGPL_DETAILS.md README.md out/mbmini24
 cp blank.msa out/mbmini24/mbmini24.msa
 git bundle create -q out/mbmini24/mbmini24.bundle HEAD main
 
-echo Don\'t forget to copy the executable to the floppy image!
+rm -rf out/src
+mkdir -p out/src
+cp $(ls -1 | grep -v ^out\$) out/src
+(cd out && zip -9 -q mbmini24/src.zip src/*)
+
+echo Copy the executable to the floppy image before running makedist.sh!
