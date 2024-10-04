@@ -28,27 +28,88 @@
 ; #############################################################################
 ; ###                                                                       ###
 ; ###                                                                       ###
-; ###                            Interrupt setup                            ###
+; ###                          Interrupt management                         ###
 ; ###                                                                       ###
 ; ###                                                                       ###
 ; #############################################################################
 ; #############################################################################
+
+; ###########################
+; ###########################
+; ###                     ###
+; ###  Public interfaces  ###
+; ###                     ###
+; ###########################
+; ###########################
+
+; IrqSetup:
+;	* Saves state of SR and disables interrupts
+;	* Save VBL vector and sets up a trivial one
+;	* Parameters:
+;		- none
+;	* Returns:
+;		- nothing
+;	* Modifies:
+;		- SR
+
+; IrqRestore:
+;	* Restores VBL vector
+;	* Restores SR (which potentially restores interrupts)
+;	* Parameters:
+;		- none
+;	* Returns:
+;		- nothing
+;	* Modifies:
+;		- SR
+
+; ########################
+; ########################
+; ###                  ###
+; ###  Implementation  ###
+; ###                  ###
+; ########################
+; ########################
 
 	.text
 
-IrqSetup:	move.w	sr, irq_sr_save.l
+; *************************
+; **                     **
+; **  Set up interrupts  **
+; **                     **
+; *************************
+
+IrqSetup:	move.w	sr, _irq_sr_save.l
 		move.w	#$2700, sr
-		move.l	_VECTOR_VBL.w, irq_vbl_save.l
-		move.l	#IrqVblEmpty, _VECTOR_VBL.w
+		move.l	_VECTOR_VBL.w, _irq_vbl_save.l
+		move.l	#_IrqVblEmpty, _VECTOR_VBL.w
 		rts
 
-IrqRestore:	move.l	irq_vbl_save.l, _VECTOR_VBL.w
-		move.w	irq_sr_save.l, sr
+; **************************
+; **                      **
+; **  Restore interrupts  **
+; **                      **
+; **************************
+
+IrqRestore:	move.l	_irq_vbl_save.l, _VECTOR_VBL.w
+		move.w	_irq_sr_save.l, sr
 		rts
 
-IrqVblEmpty:	rte
+; *************************
+; **                     **
+; **  Empty VBL handler  **
+; **                     **
+; *************************
 
+_IrqVblEmpty:	rte
+
+; ###################
+; ###################
+; ###             ###
+; ###  Variables  ###
+; ###             ###
+; ###################
+; ###################
 	.bss
 
-irq_sr_save:	.ds.w	1
-irq_vbl_save:	.ds.l	1
+_irq_sr_save:	.ds.w	1
+_irq_vbl_save:	.ds.l	1
