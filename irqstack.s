@@ -145,8 +145,8 @@ IrqStackReset:
 ; *************************
 
 _IrqVblEmpty:
-		addq.w	#1, vbl_count.l
-		rte
+	addq.w	#1, vbl_count.l
+	rte
 
 ; ###################
 ; ###################
