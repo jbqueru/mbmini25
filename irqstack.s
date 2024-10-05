@@ -89,24 +89,24 @@
 
 IrqStackSetup:
 ; Save SR and disable interrupts
-		move.w	sr, _irq_sr_save.l
-		move.w	#$2700, sr
+	move.w	sr, _irq_sr_save.l
+	move.w	#$2700, sr
 
 ; Save VBL handler and set up ours
-		clr.w	vbl_count.l
-		move.l	_VECTOR_VBL.w, _irq_vbl_save.l
-		move.l	#_IrqVblEmpty, _VECTOR_VBL.w
+	clr.w	vbl_count.l
+	move.l	_VECTOR_VBL.w, _irq_vbl_save.l
+	move.l	#_IrqVblEmpty, _VECTOR_VBL.w
 
 ; Save USP
-		move.l	usp, a0
-		move.l	a0, _stack_usp_save.l
+	move.l	usp, a0
+	move.l	a0, _stack_usp_save.l
 
 ; Save SP and set up our stack
-		move.l	(sp)+, a0		; pop the return address from the old stack
-		move.l	#STACK_GUARD, _stack.l
-		move.l	sp, _stack_ssp_save.l
-		lea.l	_stack_end.l, sp
-		jmp	(a0)			; this replaces rts - we've popped the return address into a0
+	move.l	(sp)+, a0		; pop the return address from the old stack
+	move.l	#STACK_GUARD, _stack.l
+	move.l	sp, _stack_ssp_save.l
+	lea.l	_stack_end.l, sp
+	jmp	(a0)			; this replaces rts - we've popped the return address into a0
 
 ; ************************************
 ; **                                **
@@ -116,27 +116,27 @@ IrqStackSetup:
 
 IrqStackReset:
 ; Disable interrupts
-		move.w	#$2700, sr
+	move.w	#$2700, sr
 
 ; Restore VBL handler
-		move.l	_irq_vbl_save.l, _VECTOR_VBL.w
+	move.l	_irq_vbl_save.l, _VECTOR_VBL.w
 
 ; Check for stack overflow
-		cmpi.l	#STACK_GUARD, _stack.l
-.StackOverflow:	bne.s	.StackOverflow
+	cmpi.l	#STACK_GUARD, _stack.l
+.StackOverflow:
+	bne.s	.StackOverflow
 
 ; Restore USP
-		move.l	_stack_usp_save.l, a0
-		move.l	a0, usp
+	move.l	_stack_usp_save.l, a0
+	move.l	a0, usp
 
 ; Restore SP
-		move.l	(sp)+, a0		; pop the return address from the old stack
-		move.l	_stack_ssp_save.l, sp
+	move.l	(sp)+, a0		; pop the return address from the old stack
+	move.l	_stack_ssp_save.l, sp
 
 ; Restore SR (most likely re-enables interrupts)
-		move.w	_irq_sr_save.l, sr
-		jmp	(a0)			; this replaces rts - we've popped the return address into a0
-
+	move.w	_irq_sr_save.l, sr
+	jmp	(a0)			; this replaces rts - we've popped the return address into a0
 
 ; *************************
 ; **                     **
