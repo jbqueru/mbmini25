@@ -28,59 +28,111 @@
 ; #############################################################################
 ; ###                                                                       ###
 ; ###                                                                       ###
-; ###                              Stack setup                              ###
+; ###                          Interrupt management                         ###
 ; ###                                                                       ###
 ; ###                                                                       ###
 ; #############################################################################
 ; #############################################################################
 
-STACK_GUARD	equ	$adfacade
+; ###########################
+; ###########################
+; ###                     ###
+; ###  Public interfaces  ###
+; ###                     ###
+; ###########################
+; ###########################
+
+; IrqSetup:
+;	* Saves state of SR and disables interrupts
+;	* Save VBL vector and sets up a trivial one
+;	* Parameters:
+;		- none
+;	* Returns:
+;		- nothing
+;	* Modifies:
+;		- SR
+
+; IrqRestore:
+;	* Restores VBL vector
+;	* Restores SR (which potentially restores interrupts)
+;	* Parameters:
+;		- none
+;	* Returns:
+;		- nothing
+;	* Modifies:
+;		- SR
+
+; ########################
+; ########################
+; ###                  ###
+; ###  Implementation  ###
+; ###                  ###
+; ########################
+; ########################
 
 	.text
 
-; ##########################
-; ##########################
-; ###                    ###
-; ###  Set up the stack  ###
-; ###                    ###
-; ##########################
-; ##########################
+; *************************
+; **                     **
+; **  Set up interrupts  **
+; **                     **
+; *************************
 
-; WARNING: must be called from the top level, can't be called from a subroutine
-; WARNING: stack content is gone until the stack is restored
-
-StackSetup:	move.l	usp, a0
+IrqStackSetup:	move.w	sr, _irq_sr_save.l
+		move.w	#$2700, sr
+		move.l	_VECTOR_VBL.w, _irq_vbl_save.l
+		move.l	#_IrqVblEmpty, _VECTOR_VBL.w
+		move.l	usp, a0
 		move.l	a0, stack_usp_save.l
 
-		move.l	(sp)+, a6		; pop the return address from the old stack
+		move.l	(sp)+, a0		; pop the return address from the old stack
 		move.l	sp, stack_ssp_save.l
-		move.l	#STACK_GUARD, stack.l
+		move.l	#IRQSTACK_GUARD, stack.l
 		lea.l	stack_end.l, sp
-		jmp	(a6)			; this replaces rts - we've popped the return address into a6
+		jmp	(a0)			; this replaces rts - we've popped the return address into a0
 
-; ###########################
-; ###########################
-; ###                     ###
-; ###  Restore the stack  ###
-; ###                     ###
-; ###########################
-; ###########################
+; **************************
+; **                      **
+; **  Restore interrupts  **
+; **                      **
+; **************************
 
-; WARNING: must be called from the top level, can't be called from a subroutine
-; WARNING: stack content isn't preserved across this call
-
-StackRestore:	move.w	#$2700, sr
-		cmpi.l	#STACK_GUARD, stack.l
+IrqStackReset:
+		move.w	#$2700, sr
+		move.l	_irq_vbl_save.l, _VECTOR_VBL.w
+		move.w	_irq_sr_save.l, sr
+		cmpi.l	#IRQSTACK_GUARD, stack.l
 .StackOverflow:	bne.s	.StackOverflow
-		move.l	(sp)+, a6		; pop the return address from the old stack
-		move.l	stack_ssp_save.l, sp
 		move.l	stack_usp_save.l, a0
 		move.l	a0, usp
-		jmp	(a6)			; this replaces rts - we've popped the return address into a6
+		move.l	(sp)+, a0		; pop the return address from the old stack
+		move.l	stack_ssp_save.l, sp
+		jmp	(a0)			; this replaces rts - we've popped the return address into a0
+
+
+; *************************
+; **                     **
+; **  Empty VBL handler  **
+; **                     **
+; *************************
+
+_IrqVblEmpty:	rte
+
+; ###################
+; ###################
+; ###             ###
+; ###  Variables  ###
+; ###             ###
+; ###################
+; ###################
+	.bss
+
+_irq_sr_save:	.ds.w	1
+_irq_vbl_save:	.ds.l	1
 
 	.bss
 stack_usp_save:	.ds.l	1
 stack_ssp_save:	.ds.l	1
 
-stack:		.ds.l	_STACK_SIZE
+stack:		.ds.l	IRQSTACK_SIZE
 stack_end:

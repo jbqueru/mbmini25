@@ -91,13 +91,11 @@ MainUser:	pea.l	.MainSuper.l
 ; ###########################################
 
 .MainSuper:	bsr.s	MainBSSClear
-		bsr.s	IrqSetup
-		bsr.s	StackSetup
+		bsr.s	IrqStackSetup
 		bsr.w	GfxSetup
 		bsr.w	MM24Entry
 		bsr.w	GfxRestore
-		bsr.s	StackRestore
-		bsr.s	IrqRestore
+		bsr.s	IrqStackReset
 		rts
 
 ; ###################
@@ -124,8 +122,7 @@ MainBSSClear:	lea.l	MainBssStart.l, a0
 ; #########################
 ; #########################
 
-	.include	"irq.s"
-	.include	"stack.s"
+	.include	"irqstack.s"
 	.include	"gfx.s"
 
 ; ###########################
