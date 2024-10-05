@@ -66,37 +66,39 @@ _MainBssStart:				; Beginning of the BSS - clear starting from that address
 
 	.text
 
-; #######################################
-; #######################################
-; ###                                 ###
-; ###  GEMDOS entry point (user mode) ###
-; ###                                 ###
-; #######################################
-; #######################################
+; ########################################
+; ########################################
+; ###                                  ###
+; ###  GEMDOS entry point (user mode)  ###
+; ###                                  ###
+; ########################################
+; ########################################
 
-MainUser:	pea.l	.MainSuper.l
-		move.w	#XBIOS_SUPEXEC, -(sp)
-		trap	#XBIOS_TRAP
-		addq.l	#6, sp
+MainUser:
+	pea.l	.MainSuper.l
+	move.w	#XBIOS_SUPEXEC, -(sp)
+	trap	#XBIOS_TRAP
+	addq.l	#6, sp
 
-		move.w	#GEMDOS_TERM0, -(sp)
-		trap	#GEMDOS_TRAP
+	move.w	#GEMDOS_TERM0, -(sp)
+	trap	#GEMDOS_TRAP
 
-; ###########################################
-; ###########################################
-; ###                                     ###
-; ###  True entry point (supervisor mode) ###
-; ###                                     ###
-; ###########################################
-; ###########################################
+; ############################################
+; ############################################
+; ###                                      ###
+; ###  True entry point (supervisor mode)  ###
+; ###                                      ###
+; ############################################
+; ############################################
 
-.MainSuper:	bsr.s	MainBSSClear
-		bsr.s	IrqStackSetup
-		bsr.w	GfxSetup
-		bsr.w	MM24Entry
-		bsr.w	GfxRestore
-		bsr.s	IrqStackReset
-		rts
+.MainSuper:
+	bsr.s	MainBSSClear
+	bsr.s	IrqStackSetup
+	bsr.w	GfxSetup
+	bsr.w	MM24Entry
+	bsr.w	GfxRestore
+	bsr.s	IrqStackReset
+	rts
 
 ; ###################
 ; ###################
@@ -108,11 +110,12 @@ MainUser:	pea.l	.MainSuper.l
 
 ; TODO: optimize. Or eliminate entirely, TBD.
 
-MainBSSClear:	lea.l	_MainBssStart.l, a0
-.Loop:		clr.b	(a0)+
-		cmpa.l	#_MainBssEnd, a0
-		bne.s	.Loop
-		rts
+MainBSSClear:
+	lea.l	_MainBssStart.l, a0
+.Loop:	clr.b	(a0)+
+	cmpa.l	#_MainBssEnd, a0
+	bne.s	.Loop
+	rts
 
 ; #########################
 ; #########################
