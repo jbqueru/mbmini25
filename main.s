@@ -96,7 +96,7 @@ MainUser:
 	bsr.s	IrqStackSetup
 	bsr.w	GfxSetup
 	bsr.w	MM24Entry
-	bsr.w	GfxRestore
+	bsr.w	GfxReset
 	bsr.s	IrqStackReset
 	rts
 

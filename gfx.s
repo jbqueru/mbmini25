@@ -36,31 +36,34 @@
 
 	.text
 
-GfxSetup:	move.b	GFX_VBASE_HIGH.w, _gfx_save_vbase_high.l
-		move.b	GFX_VBASE_MID.w, _gfx_save_vbase_mid.l
-		move.b	GFX_SYNC.w, _gfx_save_sync.l
-		move.b	GFX_MODE.w, _gfx_save_mode.l
-		lea.l	GFX_PALETTE.w, a0
-		lea.l	_gfx_save_palette.l, a1
-		moveq.l	#15, d7
-.Palette:	move.w	(a0)+, (a1)+
-		dbra.w	d7, .Palette
+GfxSetup:
+	move.b	GFX_VBASE_HIGH.w, _gfx_save_vbase_high.l
+	move.b	GFX_VBASE_MID.w, _gfx_save_vbase_mid.l
+	move.b	GFX_SYNC.w, _gfx_save_sync.l
+	move.b	GFX_MODE.w, _gfx_save_mode.l
+	lea.l	GFX_PALETTE.w, a0
+	lea.l	_gfx_save_palette.l, a1
+	moveq.l	#15, d7
+.Palette:
+	move.w	(a0)+, (a1)+
+	dbra.w	d7, .Palette
 
-		move.b	GFX_SYNC_INTERN | GFX_SYNC_50HZ, GFX_SYNC
+	move.b	GFX_SYNC_INTERN | GFX_SYNC_50HZ, GFX_SYNC
 
-		rts
+	rts
 
-GfxRestore:
-		lea.l	_gfx_save_palette.l, a0
-		lea.l	GFX_PALETTE.w, a1
-		moveq.l	#15, d7
-.Palette:	move.w	(a0)+, (a1)+
-		dbra.w	d7, .Palette
-		move.b	_gfx_save_vbase_high.l, GFX_VBASE_HIGH.w
-		move.b	_gfx_save_vbase_mid.l, GFX_VBASE_MID.w
-		move.b	_gfx_save_sync.l, GFX_SYNC.w
-		move.b	_gfx_save_mode.l, GFX_MODE.w
-		rts
+GfxReset:
+	lea.l	_gfx_save_palette.l, a0
+	lea.l	GFX_PALETTE.w, a1
+	moveq.l	#15, d7
+.Palette:
+	move.w	(a0)+, (a1)+
+	dbra.w	d7, .Palette
+	move.b	_gfx_save_vbase_high.l, GFX_VBASE_HIGH.w
+	move.b	_gfx_save_vbase_mid.l, GFX_VBASE_MID.w
+	move.b	_gfx_save_sync.l, GFX_SYNC.w
+	move.b	_gfx_save_mode.l, GFX_MODE.w
+	rts
 
 	.bss
 
