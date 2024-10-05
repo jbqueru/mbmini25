@@ -48,7 +48,8 @@ GfxSetup:
 	move.w	(a0)+, (a1)+
 	dbra.w	d7, .Palette
 
-	move.b	GFX_SYNC_INTERN | GFX_SYNC_50HZ, GFX_SYNC
+	move.b	#GFX_SYNC_INTERN | GFX_SYNC_50HZ, GFX_SYNC
+	move.b	#GFX_MODE_COLOW, GFX_MODE
 
 	rts
 
