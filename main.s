@@ -62,7 +62,7 @@
 	.include	"params.s"	; Add the global parameters
 
 	.bss
-MainBssStart:				; Beginning of the BSS - clear starting from that address
+_MainBssStart:				; Beginning of the BSS - clear starting from that address
 
 	.text
 
@@ -108,9 +108,9 @@ MainUser:	pea.l	.MainSuper.l
 
 ; TODO: optimize. Or eliminate entirely, TBD.
 
-MainBSSClear:	lea.l	MainBssStart.l, a0
+MainBSSClear:	lea.l	_MainBssStart.l, a0
 .Loop:		clr.b	(a0)+
-		cmpa.l	#MainBssEnd, a0
+		cmpa.l	#_MainBssEnd, a0
 		bne.s	.Loop
 		rts
 
@@ -137,5 +137,5 @@ MainBSSClear:	lea.l	MainBssStart.l, a0
 
 	.bss
 	.even
-MainBssEnd:				; End of the BSS - clear up to that address
+_MainBssEnd:				; End of the BSS - clear up to that address
 	.end
