@@ -92,3 +92,28 @@ _VECTOR_MFP_MONO	.equ	$13c
 _SYSTEM_RESVALID	.equ	$426
 _SYSTEM_RESVECTOR	.equ	$42a
 _SYSTEM_RESVALID_MAGIC	.equ	$31415926
+
+_GFX_VBASE_HIGH	.equ	$ffff8201
+_GFX_VBASE_MID	.equ	$ffff8203
+_GFX_SYNC	.equ	$ffff820a	; ......px
+					;       ||
+					;       |+- external sync (1 = yes)
+					;       +-- color refresh rate (1 = PAL - 50Hz)
+_GFX_COLOR0	.equ	$ffff8240
+_GFX_COLOR1	.equ	$ffff8242
+_GFX_COLOR2	.equ	$ffff8244
+_GFX_COLOR3	.equ	$ffff8246
+_GFX_COLOR4	.equ	$ffff8248
+_GFX_COLOR5	.equ	$ffff824a
+_GFX_COLOR6	.equ	$ffff824c
+_GFX_COLOR7	.equ	$ffff824e
+_GFX_COLOR8	.equ	$ffff8250
+_GFX_COLOR9	.equ	$ffff8252
+_GFX_COLOR10	.equ	$ffff8254
+_GFX_COLOR11	.equ	$ffff8256
+_GFX_COLOR12	.equ	$ffff8258
+_GFX_COLOR13	.equ	$ffff825a
+_GFX_COLOR14	.equ	$ffff825c
+_GFX_COLOR15	.equ	$ffff825e
+_GFX_PALETTE	.equ	_GFX_COLOR0
+_GFX_MODE	.equ	$ffff8260

@@ -93,7 +93,9 @@ MainUser:	pea.l	.MainSuper.l
 .MainSuper:	bsr.s	MainBSSClear
 		bsr.s	IrqSetup
 		bsr.s	StackSetup
+		bsr.w	GfxSetup
 		bsr.w	MM24Entry
+		bsr.w	GfxRestore
 		bsr.s	StackRestore
 		bsr.s	IrqRestore
 		rts
@@ -123,7 +125,8 @@ MainBSSClear:	lea.l	MainBssStart.l, a0
 ; #########################
 
 	.include	"irq.s"
-	.include	"stack.s"	; Stack and interrupt setup
+	.include	"stack.s"
+	.include	"gfx.s"
 
 ; ###########################
 ; ###########################
