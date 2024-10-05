@@ -34,13 +34,13 @@
 ; #############################################################################
 ; #############################################################################
 
-_GEMDOS_TERM0	.equ	0
+GEMDOS_TERM0	.equ	0
 
-_GEMDOS_TRAP	.equ	1
+GEMDOS_TRAP	.equ	1
 
-_XBIOS_SUPEXEC	.equ	38
+XBIOS_SUPEXEC	.equ	38
 
-_XBIOS_TRAP	.equ	14
+XBIOS_TRAP	.equ	14
 
 _VECTOR_RESET_SR	.equ	$0
 _VECTOR_RESET_PC	.equ	$4

@@ -75,12 +75,12 @@ MainBssStart:				; Beginning of the BSS - clear starting from that address
 ; #######################################
 
 MainUser:	pea.l	.MainSuper.l
-		move.w	#_XBIOS_SUPEXEC, -(sp)
-		trap	#_XBIOS_TRAP
+		move.w	#XBIOS_SUPEXEC, -(sp)
+		trap	#XBIOS_TRAP
 		addq.l	#6, sp
 
-		move.w	#_GEMDOS_TERM0, -(sp)
-		trap	#_GEMDOS_TRAP
+		move.w	#GEMDOS_TERM0, -(sp)
+		trap	#GEMDOS_TRAP
 
 ; ###########################################
 ; ###########################################
