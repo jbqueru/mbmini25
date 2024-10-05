@@ -46,6 +46,7 @@
 ;	* Saves state of SR and disables interrupts
 ;	* Save VBL vector and sets up a trivial one
 ;	* Save stack state (USP and SSP) and sets up our stack
+;	* MUST BE CALLED FROM TOP LEVEL, NOT FROM SUBROUTINE
 ;	* Parameters:
 ;		- none
 ;	* Returns:
@@ -58,12 +59,17 @@
 ;	* Restores SR (which potentially restores interrupts)
 ;	* Checks stack overflow
 ;	* Restore stack stack (USP and SSP)
+;	* MUST BE CALLED FROM TOP LEVEL, NOT FROM SUBROUTINE
 ;	* Parameters:
 ;		- none
 ;	* Returns:
 ;		- nothing
 ;	* Modifies:
 ;		- A0, SP, USP, SR
+
+; vbl_count:
+;	* Short variable (wraparound possible)
+;	* Incremented at each VBL
 
 ; ########################
 ; ########################
@@ -87,6 +93,7 @@ IrqStackSetup:
 		move.w	#$2700, sr
 
 ; Save VBL handler and set up ours
+		clr.w	vbl_count.l
 		move.l	_VECTOR_VBL.w, _irq_vbl_save.l
 		move.l	#_IrqVblEmpty, _VECTOR_VBL.w
 
@@ -137,7 +144,9 @@ IrqStackReset:
 ; **                     **
 ; *************************
 
-_IrqVblEmpty:	rte
+_IrqVblEmpty:
+		addq.w	#1, vbl_count.l
+		rte
 
 ; ###################
 ; ###################
@@ -148,6 +157,8 @@ _IrqVblEmpty:	rte
 ; ###################
 
 	.bss
+
+vbl_count:	.ds.w	1
 
 _irq_sr_save:	.ds.w	1
 _irq_vbl_save:	.ds.l	1
