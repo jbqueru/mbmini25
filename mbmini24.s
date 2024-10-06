@@ -32,7 +32,19 @@ MM24Entry:
 	lsl.l	#8, d0
 	move.b	GFX_VBASE_MID.w, d0
 	lsl.l	#8, d0
-	move.l	d0, a0
+	movea.l	d0, a0
+
+	lea.l	bublog.l, a5
+	lea.l	88*160(a0), a6
+	moveq.l	#111, d7
+.CL:
+	moveq.l	#29, d6
+.CR:
+	move.l	(a5)+, (a6)+
+	dbra.w	d6, .CR
+	lea.l	40(a6), a6
+	dbra.w	d7, .CL
+
 
 	move.w	#2, $ffff8a20.w		; SXinc
 	move.w	#2, $ffff8a22.w		; SYinc
@@ -73,3 +85,7 @@ MM24Entry:
 	bne.s	.Loop
 
 	rts
+
+	.data
+	.even
+bublog:	.incbin	"out/inc/bublog_bitmap.bin"
