@@ -100,4 +100,8 @@ void main() {
 	FILE* outputfile1 = fopen("out/inc/bublog_bitmap.bin", "wb");
 	fwrite(logo, 1, 120 * 112, outputfile1);
 	fclose(outputfile1);
+
+	FILE* bublogpalette = fopen("out/inc/bublog_palette.bin", "wb");
+	fwrite(pi1 + 2, 2, 16, bublogpalette);
+	fclose(bublogpalette);
 }

@@ -27,6 +27,8 @@
 	.text
 MM24Entry:
 	move.w	#$2300, sr
+	movem.l	palette.l, d0-d7
+	movem.l	d0-d7, GFX_PALETTE.w
 	moveq.l	#0, d0
 	move.b	GFX_VBASE_HIGH.w, d0
 	lsl.l	#8, d0
@@ -88,4 +90,7 @@ MM24Entry:
 
 	.data
 	.even
-bublog:	.incbin	"out/inc/bublog_bitmap.bin"
+bublog:
+	.incbin		"out/inc/bublog_bitmap.bin"
+palette:
+	.incbin		"out/inc/bublog_palette.bin"
