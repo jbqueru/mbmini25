@@ -98,6 +98,6 @@ void main() {
 	}
 
 	FILE* outputfile1 = fopen("out/inc/bublog_bitmap.bin", "wb");
-	fwrite(logo, 1, 120 * 104, outputfile1);
+	fwrite(logo, 1, 120 * 112, outputfile1);
 	fclose(outputfile1);
 }
