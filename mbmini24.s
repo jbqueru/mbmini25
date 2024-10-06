@@ -53,12 +53,20 @@ MM24Entry:
 	beq.s	.Wait
 
 	lea.l	160(a0), a1
-	move.w	#199, $ffff8a38.w	; Ycount
+	move.w	#100, $ffff8a38.w	; Ycount
 	move.l	a1, $ffff8a24.w		; Source
 	move.l	a0, $ffff8a32.w		; Destination
 	move.b	#192, $ffff8a3c.w	; Ctrl. 192 = start hog
-	nop
-	nop
+.W1:
+	btst	#7, $ffff8a3c.w
+	bne.s	.W1
+
+	move.w	#99, $ffff8a38.w	; Ycount
+	move.b	#192, $ffff8a3c.w	; Ctrl. 192 = start hog
+.W2:
+	btst	#7, $ffff8a3c.w
+	bne.s	.W2
+
 
 
 	cmpi.b	#$39, $fffffc02.w
