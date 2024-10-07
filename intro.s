@@ -96,7 +96,9 @@ Intro:
 	move.w	#-110, $ffff8a30.w	; DYinc
 	move.b	#2, $ffff8a3a.w		; HOP. 2 = src
 	move.b	#3, $ffff8a3b.w		; BOP. 3 = src
-	move.b	#0, $ffff8a3d.w		; Shift
+	move.b	vbl_count + 1, d0
+	andi.b	#15, d0
+	move.b	d0, $ffff8a3d.w		; Shift
 	move.w	#15, $ffff8a36.w	; Xcount
 	move.w	#4, $ffff8a38.w		; Ycount
 	move.l	#bublog + 120 * 40, $ffff8a24.w		; Source
