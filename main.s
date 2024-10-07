@@ -60,6 +60,17 @@
 ; #############################################################################
 ; #############################################################################
 
+; This file primarily contains the interactions with the host OS,
+; saving the state of the machine and restoring it at the end.
+
+; #####################
+; #####################
+; ###               ###
+; ###  Boilerplate  ###
+; ###               ###
+; #####################
+; #####################
+
 	.68000
 	.include	"defines.s"	; Start with the ST defines
 	.include	"params.s"	; Add the global parameters
@@ -140,6 +151,14 @@ MainBSSClear:
 ; ###########################
 
 	.include	"mbmini24.s"	; The demo's main code
+
+; #####################
+; #####################
+; ###               ###
+; ###  Boilerplate  ###
+; ###               ###
+; #####################
+; #####################
 
 	.bss
 	.even
