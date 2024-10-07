@@ -39,10 +39,15 @@ Intro:
 	lea.l	88*160(a0), a6
 	moveq.l	#111, d7
 .CL:
-	moveq.l	#29, d6
+	moveq.l	#14, d6
 .CR:
-	move.l	(a5)+, (a6)+
+	move.w	(a5), (a6)+
+	move.w	30(a5), (a6)+
+	move.w	60(a5), (a6)+
+	move.w	90(a5), (a6)+
+	addq.l	#2, a5
 	dbra.w	d6, .CR
+	lea.l	90(a5), a5
 	lea.l	40(a6), a6
 	dbra.w	d7, .CL
 
