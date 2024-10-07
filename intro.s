@@ -53,6 +53,13 @@ Intro:
 	dbra.w	d7, .CL
 
 
+
+.Loop:
+	move.w	vbl_count.l, d0
+.Wait:
+	cmp.w	vbl_count.l, d0
+	beq.s	.Wait
+
 	move.w	#2, $ffff8a20.w		; SXinc
 	move.w	#2, $ffff8a22.w		; SYinc
 	move.w	#$ffff, $ffff8a28.w	; Endmask1
@@ -64,12 +71,6 @@ Intro:
 	move.b	#3, $ffff8a3b.w		; BOP. 3 = src
 	move.b	#0, $ffff8a3d.w		; Shift
 	move.w	#80, $ffff8a36.w	; Xcount
-
-.Loop:
-	move.w	vbl_count.l, d0
-.Wait:
-	cmp.w	vbl_count.l, d0
-	beq.s	.Wait
 
 	lea.l	160(a0), a1
 	move.w	#100, $ffff8a38.w	; Ycount
@@ -86,10 +87,27 @@ Intro:
 	btst	#7, $ffff8a3c.w
 	bne.s	.W2
 
+	move.w	#2, $ffff8a20.w		; SXinc
+	move.w	#2, $ffff8a22.w		; SYinc
+	move.w	#$ffff, $ffff8a28.w	; Endmask1
+	move.w	#$ffff, $ffff8a2a.w	; EndMask2
+	move.w	#$ffff, $ffff8a2c.w	; EndMask3
+	move.w	#8, $ffff8a2e.w		; DXinc
+	move.w	#-110, $ffff8a30.w	; DYinc
+	move.b	#2, $ffff8a3a.w		; HOP. 2 = src
+	move.b	#3, $ffff8a3b.w		; BOP. 3 = src
+	move.b	#0, $ffff8a3d.w		; Shift
+	move.w	#15, $ffff8a36.w	; Xcount
+	move.w	#4, $ffff8a38.w		; Ycount
+	move.l	#bublog + 120 * 40, $ffff8a24.w		; Source
+	lea	24000(a0), a1
+	move.l	a1, $ffff8a32.w		; Destination
+	move.b	#192, $ffff8a3c.w	; Ctrl. 192 = start hog
+
 
 
 	cmpi.b	#$39, $fffffc02.w
-	bne.s	.Loop
+	bne.w	.Loop
 
 	rts
 
