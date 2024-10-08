@@ -128,3 +128,62 @@ GFX_MODE	.equ	$ffff8260	; ......mm
 GFX_MODE_COLOW	.equ	%00000000
 GFX_MODE_COMID	.equ	%00000001
 GFX_MODE_MONO	.equ	%00000010
+
+
+BLIT_HALFTONE0	.equ	$ffff8a00
+BLIT_HALFTONE1	.equ	$ffff8a02
+BLIT_HALFTONE2	.equ	$ffff8a04
+BLIT_HALFTONE3	.equ	$ffff8a06
+BLIT_HALFTONE4	.equ	$ffff8a08
+BLIT_HALFTONE5	.equ	$ffff8a0a
+BLIT_HALFTONE6	.equ	$ffff8a0c
+BLIT_HALFTONE7	.equ	$ffff8a0e
+BLIT_HALFTONE8	.equ	$ffff8a10
+BLIT_HALFTONE9	.equ	$ffff8a12
+BLIT_HALFTONE10	.equ	$ffff8a14
+BLIT_HALFTONE11	.equ	$ffff8a16
+BLIT_HALFTONE12	.equ	$ffff8a18
+BLIT_HALFTONE13	.equ	$ffff8a1a
+BLIT_HALFTONE14	.equ	$ffff8a1c
+BLIT_HALFTONE15	.equ	$ffff8a1e
+BLIT_HALFTONE	.equ	BLIT_HALFTONE0
+BLIT_SRC_XINC	.equ	$ffff8a20
+BLIT_SRC_YINC	.equ	$ffff8a22
+BLIT_SRC_ADDR	.equ	$ffff8a24
+BLIT_ENDMASK1	.equ	$ffff8a28
+BLIT_ENDMASK2	.equ	$ffff8a2a
+BLIT_ENDMASK3	.equ	$ffff8a2c
+BLIT_DST_XINC	.equ	$ffff8a2e
+BLIT_DST_YINC	.equ	$ffff8a30
+BLIT_DST_ADDR	.equ	$ffff8a32
+BLIT_XCOUNT	.equ	$ffff8a36
+BLIT_YCOUNT	.equ	$ffff8a38
+BLIT_HOP	.equ	$ffff8a3a	; ......sh
+					;       ||
+					;       |+- 1 = clear bits from halftone
+					;       +-- 1 = clear bits from source
+BLIT_HOP_1	.equ	%00000000
+BLIT_HOP_HTONE	.equ	%00000001
+BLIT_HOP_SRC	.equ	%00000010
+BLIT_HOP_AND	.equ	%00000011
+BLIT_OP		.equ	$ffff8a3b	; ....abcd
+					;     ||||
+					;     |||+- 1 = include bits from source and target
+					;     ||+-- 1 = include bits from source and not target
+					;     |+--- 1 = include bits from not source and target
+					;     +---- 1 = include bits from not source and not target
+BLIT_OP_ST	.equ	%00000001
+BLIT_OP_SNT	.equ	%00000010
+BLIT_OP_NST	.equ	%00000100
+BLIT_OP_NSNT	.equ	%00001000
+BLIT_CTRL	.equ	$ffff8a3c	; bhs.llll
+					; ||| ||||
+					; ||| ++++- start line for halftone
+					; ||+------ 1 = smudge
+					; |+------- 1 = hog bus
+					; +-------- 1 = blitter start / busy
+BLIT_SKEW	.equ	$ffff8a3d	; if..ssss
+					; ||  ||||
+					; ||  ++++- right shift amount
+					; |+------- 0 = include final source read, 1 = no final source read
+					; +-------- 0 = no initial source read, 1 = include initial source read
