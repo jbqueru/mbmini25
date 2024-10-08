@@ -60,8 +60,14 @@
 	.text
 
 GfxSetup:
-	move.b	GFX_VBASE_HIGH.w, _gfx_save_vbase_high.l
-	move.b	GFX_VBASE_MID.w, _gfx_save_vbase_mid.l
+	moveq.l	#0, d0
+	move.b	GFX_VBASE_HIGH.w, d0
+	move.b	d0, _gfx_save_vbase_high.l
+	lsl.l	#8, d0
+	move.b	GFX_VBASE_MID.w, d0
+	move.b	d0,_gfx_save_vbase_mid.l
+	lsl.l	#8, d0
+	move.l	d0, gfx_os_fb
 	move.b	GFX_SYNC.w, _gfx_save_sync.l
 	move.b	GFX_MODE.w, _gfx_save_mode.l
 	lea.l	GFX_PALETTE.w, a0
@@ -104,3 +110,5 @@ _gfx_save_vbase_mid:	.ds.b	1
 _gfx_save_sync:		.ds.b	1
 _gfx_save_mode:		.ds.b	1
 _gfx_save_palette:	.ds.w	16
+
+gfx_os_fb:	.ds.l	1
