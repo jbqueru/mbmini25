@@ -26,7 +26,7 @@
 
 	.text
 Intro:
-	movem.l	palette.l, d0-d7
+	movem.l	intro_palette.l, d0-d7
 	movem.l	d0-d7, GFX_PALETTE.w
 	moveq.l	#0, d0
 	movea.l	gfx_os_fb, a0
@@ -38,7 +38,7 @@ Intro:
 	cmp.w	(a0), d0
 	beq.s	.Wait
 
-	move.l	#bublog, $ffff8a24.w	; Source Address
+	move.l	#intro_logo, $ffff8a24.w	; Source Address
 	move.w	#2, $ffff8a20.w		; Source X increment
 	move.w	#2, $ffff8a22.w		; Source Y increment
 
@@ -76,7 +76,7 @@ Intro:
 
 	.data
 	.even
-bublog:
+intro_logo:
 	.incbin		"out/inc/bublog_bitmap.bin"
-palette:
+intro_palette:
 	.incbin		"out/inc/bublog_palette.bin"
