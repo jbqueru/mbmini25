@@ -74,10 +74,10 @@ Intro:
 	addi.b	#BLIT_SHIFT_NISR + BLIT_SHIFT_NFSR, d0
 	move.b	d0, BLIT_SHIFT
 
-	move.l	a0, BLIT_DST_ADDR.w		; Destination address
+	move.l	a0, BLIT_DST_ADDR.w
 
-	move.w	#4, BLIT_YCOUNT.w		; Ycount
-	move.b	#BLIT_CTRL_HOG + BLIT_CTRL_BUSY, BLIT_CTRL.w	; Ctrl. 192 = start hog
+	move.w	#4, BLIT_YCOUNT.w
+	move.b	#BLIT_CTRL_HOG + BLIT_CTRL_BUSY, BLIT_CTRL.w
 
 	lea.l	160(a0), a0
 	dbra.w	d7, .BlitLine
