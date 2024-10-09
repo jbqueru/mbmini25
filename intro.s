@@ -121,8 +121,9 @@ Intro:
 	move.w	#$0000, $ffff8a2c.w	; EndMask3
 
 	move.w	#16, $ffff8a36.w	; Xcount
-	move.b	#2, $ffff8a3a.w		; HOP. 2 = src
-	move.b	#3, $ffff8a3b.w		; BOP. 3 = src
+
+	move.w	#$0203, $ffff8a3a.w
+
 	move.b	#$40, $ffff8a3d.w	; Shift register. 40 = NFSR
 
 	moveq.l	#111, d7
