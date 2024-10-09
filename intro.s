@@ -57,7 +57,12 @@ Intro:
 .BlitLine:
 	move.w	d7, d0
 	add.w	vbl_count, d0
-	andi.w	#15, d0
+	andi.w	#31, d0
+	cmp.w	#16, d0
+	blt.s	.XOk
+	subi.w	#31, d0
+	neg.w	d0
+.XOk:
 
 	moveq.l	#-1, d1
 	lsr.w	d0, d1
