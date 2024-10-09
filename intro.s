@@ -38,31 +38,31 @@ Intro:
 	cmp.w	(a0), d0
 	beq.s	.Wait
 
-	move.l	#intro_logo, $ffff8a24.w	; Source Address
-	move.w	#2, $ffff8a20.w		; Source X increment
-	move.w	#2, $ffff8a22.w		; Source Y increment
+	move.l	#intro_logo, BLIT_SRC_ADDR.w
+	move.w	#2, BLIT_SRC_XINC.w
+	move.w	#2, BLIT_SRC_YINC.w
 
 	movea.l	gfx_os_fb, a0
-	move.w	#8, $ffff8a2e.w		; Destination X increment
-	move.w	#-118, $ffff8a30.w	; Destination Y increment
+	move.w	#8, BLIT_DST_XINC.w
+	move.w	#-118, BLIT_DST_YINC.w
 
-	move.w	#$ffff, $ffff8a28.w	; Endmask1
-	move.w	#$ffff, $ffff8a2a.w	; EndMask2
-	move.w	#$0000, $ffff8a2c.w	; EndMask3
+	move.w	#$ffff, BLIT_ENDMASK1.w
+	move.w	#$ffff, BLIT_ENDMASK2.w
+	move.w	#$0000, BLIT_ENDMASK3.w
 
-	move.w	#16, $ffff8a36.w	; Xcount
+	move.w	#16, BLIT_XCOUNT.w
 
-	move.w	#$0203, $ffff8a3a.w
+	move.w	#(BLIT_HOP_SRC << 8) + BLIT_OP_ST + BLIT_OP_SNT, BLIT_HOPOP.w
 
-	move.b	#$40, $ffff8a3d.w	; Shift register. 40 = NFSR
+	move.b	#BLIT_SHIFT_NISR + BLIT_SHIFT_NFSR, BLIT_SHIFT
 
 	moveq.l	#111, d7
 
 .BlitLine:
-	move.l	a0,$ffff8a32.w		; Destination address
+	move.l	a0, BLIT_DST_ADDR.w		; Destination address
 
-	move.w	#4, $ffff8a38.w		; Ycount
-	move.b	#192, $ffff8a3c.w	; Ctrl. 192 = start hog
+	move.w	#4, BLIT_YCOUNT.w		; Ycount
+	move.b	#BLIT_CTRL_HOG + BLIT_CTRL_BUSY, BLIT_CTRL.w	; Ctrl. 192 = start hog
 
 	lea.l	160(a0), a0
 	dbra.w	d7, .BlitLine
