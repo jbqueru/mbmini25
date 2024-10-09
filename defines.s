@@ -162,10 +162,8 @@ BLIT_HOP	.equ	$ffff8a3a	; ......sh
 					;       ||
 					;       |+- 1 = clear bits from halftone
 					;       +-- 1 = clear bits from source
-BLIT_HOP_1	.equ	%00000000
 BLIT_HOP_HTONE	.equ	%00000001
 BLIT_HOP_SRC	.equ	%00000010
-BLIT_HOP_AND	.equ	%00000011
 BLIT_OP		.equ	$ffff8a3b	; ....abcd
 					;     ||||
 					;     |||+- 1 = include bits from source and target
@@ -176,14 +174,22 @@ BLIT_OP_ST	.equ	%00000001
 BLIT_OP_SNT	.equ	%00000010
 BLIT_OP_NST	.equ	%00000100
 BLIT_OP_NSNT	.equ	%00001000
+BLIT_HOPOP	.equ	BLIT_HOP
 BLIT_CTRL	.equ	$ffff8a3c	; bhs.llll
 					; ||| ||||
 					; ||| ++++- start line for halftone
 					; ||+------ 1 = smudge
 					; |+------- 1 = hog bus
 					; +-------- 1 = blitter start / busy
-BLIT_SKEW	.equ	$ffff8a3d	; if..ssss
+BLIT_CTRL_SMUDGE	.equ	%00100000
+BLIT_CTRL_HOG	.equ	%01000000
+BLIT_CTRL_BUSY	.equ	%10000000
+BLIT_SHIFT	.equ	$ffff8a3d	; if..ssss
 					; ||  ||||
-					; ||  ++++- right shift amount
+					; ||  ++++- shift amount
 					; |+------- 0 = include final source read, 1 = no final source read
 					; +-------- 0 = no initial source read, 1 = include initial source read
+BLIT_SHIFT_NISR	.equ	%00000000
+BLIT_SHIFT_IISR	.equ	%10000000
+BLIT_SHIFT_NFSR	.equ	%01000000
+BLIT_SHIFT_IFSR	.equ	%00000000
