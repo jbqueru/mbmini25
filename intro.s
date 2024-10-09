@@ -31,25 +31,6 @@ Intro:
 	moveq.l	#0, d0
 	movea.l	gfx_os_fb, a0
 
-	lea.l	bublog.l, a5
-	lea.l	88 * 160(a0), a6
-	moveq.l	#111, d7
-.CL:
-	moveq.l	#3, d6
-.CP:
-	moveq.l	#14, d5
-.CR:
-	move.w	(a5), (a6)
-	addq.l	#2, a5
-	addq.l	#8, a6
-	dbra.w	d5, .CR
-	lea.l	-118(a6), a6
-	dbra.w	d6, .CP
-	lea.l	152(a6), a6
-	dbra.w	d7, .CL
-
-
-
 .Loop:
 	move.w	vbl_count.l, d0
 .Wait:
