@@ -29,7 +29,7 @@ Intro:
 	movem.l	intro_palette.l, d0-d7
 	movem.l	d0-d7, GFX_PALETTE.w
 	moveq.l	#0, d0
-	movea.l	gfx_os_fb, a0
+	movea.l	gfx_os_fb.l, a0
 
 .Loop:
 	lea.l	vbl_count.l, a0
