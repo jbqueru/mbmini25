@@ -32,9 +32,10 @@ Intro:
 	movea.l	gfx_os_fb, a0
 
 .Loop:
-	move.w	vbl_count.l, d0
+	lea.l	vbl_count.l, a0
+	move.w	(a0), d0
 .Wait:
-	cmp.w	vbl_count.l, d0
+	cmp.w	(a0), d0
 	beq.s	.Wait
 
 	move.w	#2, $ffff8a20.w		; SXinc
