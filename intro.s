@@ -46,19 +46,29 @@ Intro:
 	move.w	#8, BLIT_DST_XINC.w
 	move.w	#-118, BLIT_DST_YINC.w
 
-	move.w	#$ffff, BLIT_ENDMASK1.w
 	move.w	#$ffff, BLIT_ENDMASK2.w
-	move.w	#$0000, BLIT_ENDMASK3.w
 
 	move.w	#16, BLIT_XCOUNT.w
 
 	move.w	#(BLIT_HOP_SRC << 8) + BLIT_OP_ST + BLIT_OP_SNT, BLIT_HOPOP.w
 
-	move.b	#BLIT_SHIFT_NISR + BLIT_SHIFT_NFSR, BLIT_SHIFT
-
 	moveq.l	#111, d7
 
 .BlitLine:
+	move.w	d7, d0
+	add.w	vbl_count, d0
+	andi.w	#15, d0
+
+	moveq.l	#-1, d1
+	lsr.w	d0, d1
+
+	move.w	d1, BLIT_ENDMASK1.w
+	not.w	d1
+	move.w	d1, BLIT_ENDMASK3.w
+
+	addi.b	#BLIT_SHIFT_NISR + BLIT_SHIFT_NFSR, d0
+	move.b	d0, BLIT_SHIFT
+
 	move.l	a0, BLIT_DST_ADDR.w		; Destination address
 
 	move.w	#4, BLIT_YCOUNT.w		; Ycount
