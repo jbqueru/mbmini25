@@ -31,12 +31,29 @@ Intro:
 	moveq.l	#0, d0
 	movea.l	gfx_os_fb.l, a0
 
+	move.l	#intro_music, intro_music_pointer.l
+
 .Loop:
 	lea.l	vbl_count.l, a0
 	move.w	(a0), d0
 .Wait:
 	cmp.w	(a0), d0
 	beq.s	.Wait
+
+	move.l	intro_music_pointer.l, a0
+	lea.l	$ffff8800.w, a1
+	moveq.l	#13, d7
+
+.CopyReg:
+	move.b	d7, (a1)
+	move.b	(a0)+, 2(a1)
+	dbra	d7, .CopyReg
+
+	cmpa.l	#intro_music_end, a0
+	bne.s	.InMusic
+	lea.l	intro_music, a0
+.InMusic:
+	move.l	a0, intro_music_pointer.l
 
 	move.l	#intro_logo, BLIT_SRC_ADDR.w
 	move.w	#2, BLIT_SRC_XINC.w
@@ -95,3 +112,11 @@ intro_logo:
 	.incbin		"out/inc/bublog_bitmap.bin"
 intro_palette:
 	.incbin		"out/inc/bublog_palette.bin"
+intro_music:
+	.incbin		"DIGITALF.BIN"
+intro_music_end:
+
+	.bss
+	.even
+intro_music_pointer:
+	.ds.l	1
