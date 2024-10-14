@@ -34,9 +34,15 @@ unsigned char rawpixels[320][200];
 
 unsigned char logo[120 * 112];
 
+unsigned char menubg[160 * 200];
+
 void main() {
-	FILE* inputfile = fopen("BUBLOG.PI1", "rb");
+	FILE* inputfile;
+	FILE* outputfile;
+
+	inputfile = fopen("BUBLOG.PI1", "rb");
 	fread(pi1, 1, 32034, inputfile);
+	fclose(inputfile);
 
 	for (int y = 0; y < 200; y++) {
 		for (int x = 0; x < 320; x++) {
@@ -97,11 +103,64 @@ void main() {
 		}
 	}
 
-	FILE* outputfile1 = fopen("out/inc/bublog_bitmap.bin", "wb");
-	fwrite(logo, 1, 120 * 112, outputfile1);
-	fclose(outputfile1);
+	outputfile = fopen("out/inc/bublog_bitmap.bin", "wb");
+	fwrite(logo, 1, 120 * 112, outputfile);
+	fclose(outputfile);
 
-	FILE* bublogpalette = fopen("out/inc/bublog_palette.bin", "wb");
-	fwrite(pi1 + 2, 2, 16, bublogpalette);
-	fclose(bublogpalette);
+	outputfile = fopen("out/inc/bublog_palette.bin", "wb");
+	fwrite(pi1 + 2, 2, 16, outputfile);
+	fclose(outputfile);
+
+	inputfile = fopen("BUBLOG.PI1", "rb");
+	fread(pi1, 1, 32034, inputfile);
+	fclose(inputfile);
+
+	for (int y = 0; y < 200; y++) {
+		for (int x = 0; x < 320; x++) {
+			int byteoffset = 34;
+			byteoffset += (x / 16) * 8;
+			byteoffset += (x / 8) % 2;
+			byteoffset += y * 160;
+
+			int bitoffset = 7 - (x % 8);
+
+			rawpixels[x][y] =
+				(((pi1[byteoffset] >> bitoffset) & 1)) +
+				(((pi1[byteoffset + 2] >> bitoffset) & 1) * 2) +
+				(((pi1[byteoffset + 4] >> bitoffset) & 1) * 4) +
+				(((pi1[byteoffset + 6] >> bitoffset) & 1) * 8);
+		}
+	}
+
+	for (int i = 0; i < 160 * 200; i++) {
+		menubg[i] = 0;
+	}
+
+	for (int y = 0; y < 200; y++) {
+		for (int x = 0; x < 320; x++) {
+			unsigned int c = rawpixels[x][y];
+			if (c & 1) {
+				menubg[(x / 16) * 8 + (x & 8) / 8 + y * 160 + 0] |= (0x80 >> (x & 7));
+			}
+			if (c & 2) {
+				menubg[(x / 16) * 8 + (x & 8) / 8 + y * 160 + 2] |= (0x80 >> (x & 7));
+			}
+			if (c & 4) {
+				menubg[(x / 16) * 8 + (x & 8) / 8 + y * 160 + 4] |= (0x80 >> (x & 7));
+			}
+			if (c & 8) {
+				menubg[(x / 16) * 8 + (x & 8) / 8 + y * 160 + 6] |= (0x80 >> (x & 7));
+			}
+		}
+	}
+
+	outputfile = fopen("out/inc/menu_bitmap.bin", "wb");
+	fwrite(menubg, 1, 160 * 200, outputfile);
+	fclose(outputfile);
+
+	outputfile = fopen("out/inc/menu_palette.bin", "wb");
+	fwrite(pi1 + 2, 2, 16, outputfile);
+	fclose(outputfile);
+
+
 }

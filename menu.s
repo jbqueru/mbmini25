@@ -26,8 +26,25 @@
 
 	.text
 Menu:
+	movem.l	menu_palette.l, d0-d7
+	movem.l	d0-d7, $ffff8240.w
+
 	clr.b	menu_space_pressed.l
+
+	lea.l	menu_background.l, a0
+	movea.l	gfx_os_fb, a1
+	move.w	#7999, d7
+.CopyBg:
+	move.l	(a0)+, (a1)+
+	dbra.w	d7, .CopyBg
+
 .Loop:
+	lea.l	vbl_count.l, a0
+	move.w	(a0), d0
+.WaitVbl:
+	cmp.w	(a0), d0
+	beq.s	.WaitVbl
+
 	cmpi.b	#$39, $fffffc02.w
 	bne.s	.UpDone
 	move.b	#1, menu_space_pressed.l
@@ -39,5 +56,13 @@ Menu:
 
 	rts
 
+	.data
+	.even
+menu_background:
+	.incbin		"out/inc/menu_bitmap.bin"
+menu_palette:
+	.incbin		"out/inc/menu_palette.bin"
+
+	.bss
 menu_space_pressed:
 	.ds.b	1
