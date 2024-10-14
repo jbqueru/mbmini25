@@ -32,6 +32,7 @@ Intro:
 	movea.l	gfx_os_fb.l, a0
 
 	move.l	#intro_music, intro_music_pointer.l
+	clr.b	intro_space_pressed.l
 
 .Loop:
 	lea.l	vbl_count.l, a0
@@ -102,7 +103,14 @@ Intro:
 
 
 	cmpi.b	#$39, $fffffc02.w
+	bne.s	.UpDone
+	move.b	#1, intro_space_pressed.l
+.UpDone:
+	cmpi.b	#1, intro_space_pressed.l
 	bne.w	.Loop
+	cmpi.b	#$b9, $fffffc02.w
+	bne.w	.Loop
+
 
 	rts
 
@@ -120,3 +128,5 @@ intro_music_end:
 	.even
 intro_music_pointer:
 	.ds.l	1
+intro_space_pressed:
+	.ds.b	1
