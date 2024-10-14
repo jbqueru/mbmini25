@@ -25,12 +25,19 @@
 ; See main.s for more information
 
 	.text
-MM24Entry:
-	move.w	#$2300, sr
-	jsr	Intro
-	jsr	Menu
+Menu:
+	clr.b	menu_space_pressed.l
+.Loop:
+	cmpi.b	#$39, $fffffc02.w
+	bne.s	.UpDone
+	move.b	#1, menu_space_pressed.l
+.UpDone:
+	cmpi.b	#1, menu_space_pressed.l
+	bne.w	.Loop
+	cmpi.b	#$b9, $fffffc02.w
+	bne.w	.Loop
 
 	rts
 
-	.include	"intro.s"
-	.include	"menu.s"
+menu_space_pressed:
+	.ds.b	1
