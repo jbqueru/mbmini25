@@ -27,8 +27,8 @@ mkdir -p out/bin
 mkdir -p out/inc
 mkdir -p out/tos
 
-cc bitmaps_convert.c -o out/bin/bitmaps_convert
-out/bin/bitmaps_convert
+cc convert_bitmaps.c -o out/bin/convert_bitmaps
+out/bin/convert_bitmaps
 
 rmac -s -p -4 main.s -o out/tos/MBMINI24.PRG
 chmod 664 out/tos/MBMINI24.PRG

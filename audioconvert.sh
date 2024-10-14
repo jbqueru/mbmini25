@@ -24,4 +24,4 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 mkdir -p out/tos
-rmac -s -v -p -4 musics_convert.s -o out/tos/ACONVERT.PRG
+rmac -s -p -4 convert_musics.s -o out/tos/ACONVERT.PRG
