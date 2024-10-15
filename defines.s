@@ -193,3 +193,29 @@ BLIT_SHIFT_NISR	.equ	%00000000
 BLIT_SHIFT_IISR	.equ	%10000000
 BLIT_SHIFT_NFSR	.equ	%01000000
 BLIT_SHIFT_IFSR	.equ	%00000000
+
+
+MFP_GPDR	.equ	$fffffa01
+MFP_AER		.equ	$fffffa03
+MFP_DDR		.equ	$fffffa05
+MFP_IERA	.equ	$fffffa07
+MFP_IERB	.equ	$fffffa09
+MFP_IPRA	.equ	$fffffa0b
+MFP_IPRB	.equ	$fffffa0d
+MFP_ISRA	.equ	$fffffa0f
+MFP_ISRB	.equ	$fffffa11
+MFP_IMRA	.equ	$fffffa13
+MFP_IMRB	.equ	$fffffa15
+MFP_VR		.equ	$fffffa17
+MFP_TACR	.equ	$fffffa19
+MFP_TBCR	.equ	$fffffa1b
+MFP_TCDCR	.equ	$fffffa1d
+MFP_TADR	.equ	$fffffa1f
+MFP_TBDR	.equ	$fffffa21
+MFP_TCDR	.equ	$fffffa23
+MFP_TDDR	.equ	$fffffa25
+MFP_SCR		.equ	$fffffa27
+MFP_UCR		.equ	$fffffa29
+MFP_RSR		.equ	$fffffa2b
+MFP_TSR		.equ	$fffffa2d
+MFP_UDR		.equ	$fffffa2f
