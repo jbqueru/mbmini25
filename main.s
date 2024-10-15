@@ -109,11 +109,13 @@ MainUser:
 	bsr.s	MainBSSClear
 	bsr.s	IrqStackSetup
 	bsr.w	MfpSetup
+	bsr.w	PsgSetup
 	bsr.w	GfxSetup
 
 	bsr.w	MM24Entry
 
 	bsr.w	GfxReset
+	bsr.w	PsgReset
 	bsr.w	MfpReset
 	bsr.s	IrqStackReset
 	rts
@@ -146,6 +148,7 @@ MainBSSClear:
 	.include	"irqstack.s"
 	.include	"mfp.s"
 	.include	"gfx.s"
+	.include	"psg.s"
 
 ; ###########################
 ; ###########################
