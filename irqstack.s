@@ -52,7 +52,7 @@
 ;	* Returns:
 ;		- nothing
 ;	* Modifies:
-;		- A0, SP, SR
+;		- A0, SP (!!), SR (!!)
 
 ; IrqStackReset:
 ;	* Restores VBL vector
@@ -65,7 +65,7 @@
 ;	* Returns:
 ;		- nothing
 ;	* Modifies:
-;		- A0, SP, USP, SR
+;		- A0, SP (!!), USP, SR (!!)
 
 ; vbl_count:
 ;	* Short variable (wraparound possible)
