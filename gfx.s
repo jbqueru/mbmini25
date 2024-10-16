@@ -34,6 +34,8 @@
 ; #############################################################################
 ; #############################################################################
 
+	.text
+
 ; ###########################
 ; ###########################
 ; ###                     ###
@@ -49,17 +51,19 @@
 ; GfxReset:
 ;	* Restores state of graphics hardware
 
-; ########################
-; ########################
-; ###                  ###
-; ###  Implementation  ###
-; ###                  ###
-; ########################
-; ########################
-
-	.text
+; #####################################
+; #####################################
+; ###                               ###
+; ###  Set up graphics environment  ###
+; ###                               ###
+; #####################################
+; #####################################
 
 GfxSetup:
+; Enable interrupts, we'll need those when waiting for a VBL
+	move.w	#$2300, sr
+
+; Save framebuffer address registers, compute framebuffer address
 	moveq.l	#0, d0
 	move.b	GFX_VBASE_HIGH.w, d0
 	move.b	d0, _gfx_save_vbase_high.l
@@ -68,31 +72,106 @@ GfxSetup:
 	move.b	d0,_gfx_save_vbase_mid.l
 	lsl.l	#8, d0
 	move.l	d0, gfx_os_fb
+
+; Save other graphics registers
 	move.b	GFX_SYNC.w, _gfx_save_sync.l
 	move.b	GFX_MODE.w, _gfx_save_mode.l
 	lea.l	GFX_PALETTE.w, a0
 	lea.l	_gfx_save_palette.l, a1
 	moveq.l	#15, d7
-.Palette:
+.SavePalette:
 	move.w	(a0)+, (a1)+
-	dbra.w	d7, .Palette
+	dbra.w	d7, .SavePalette
 
+; Wait for a VBL before making visible changes
+	lea.l	vbl_count.l, a0
+	move.w	(a0), d0
+.WaitVbl:
+	cmp.w	(a0), d0
+	bne.s	.WaitVbl
+
+; Switch to mode 0, 50 Hz
 	move.b	#GFX_SYNC_INTERN | GFX_SYNC_50HZ, GFX_SYNC
 	move.b	#GFX_MODE_COLOW, GFX_MODE
 
+; Erase palette
+	moveq.l	#0, d0
+	lea.l	GFX_PALETTE.w, a0
+	moveq.l	#15, d7
+.ClearPalette:
+	move.w	d0, (a0)+
+	dbra.w	d7, .ClearPalette
+
+; Erase framebuffer
+	moveq.l	#0, d0
+	movea.l	gfx_os_fb, a0
+	move.w	#1999, d7
+.ClearScreen:
+	move.l	d0, (a0)+
+	move.l	d0, (a0)+
+	move.l	d0, (a0)+
+	move.l	d0, (a0)+
+	dbra.w	d7, .ClearScreen
+
 	rts
 
+; ######################################
+; ######################################
+; ###                                ###
+; ###  Restore graphics environment  ###
+; ###                                ###
+; ######################################
+; ######################################
+
 GfxReset:
+; Wait for a VBL before making visible changes
+	lea.l	vbl_count.l, a0
+	move.w	(a0), d0
+.WaitVbl1:
+	cmp.w	(a0), d0
+	bne.s	.WaitVbl1
+
+; Erase palette
+	moveq.l	#0, d0
+	lea.l	GFX_PALETTE.w, a0
+	moveq.l	#15, d7
+.ClearPalette:
+	move.w	d0, (a0)+
+	dbra.w	d7, .ClearPalette
+
+; Erase framebuffer
+	moveq.l	#0, d0
+	movea.l	gfx_os_fb, a0
+	move.w	#1999, d7
+.ClearScreen:
+	move.l	d0, (a0)+
+	move.l	d0, (a0)+
+	move.l	d0, (a0)+
+	move.l	d0, (a0)+
+	dbra.w	d7, .ClearScreen
+
+	move.b	_gfx_save_vbase_high.l, GFX_VBASE_HIGH.w
+	move.b	_gfx_save_vbase_mid.l, GFX_VBASE_MID.w
+
+; Wait for a VBL before making visible changes
+	lea.l	vbl_count.l, a0
+	move.w	(a0), d0
+.WaitVbl2:
+	cmp.w	(a0), d0
+	bne.s	.WaitVbl2
+
+; Restore palette
 	lea.l	_gfx_save_palette.l, a0
 	lea.l	GFX_PALETTE.w, a1
 	moveq.l	#15, d7
-.Palette:
+.RestorePalette:
 	move.w	(a0)+, (a1)+
-	dbra.w	d7, .Palette
-	move.b	_gfx_save_vbase_high.l, GFX_VBASE_HIGH.w
-	move.b	_gfx_save_vbase_mid.l, GFX_VBASE_MID.w
+	dbra.w	d7, .RestorePalette
+
+; Restore mode / sync
 	move.b	_gfx_save_sync.l, GFX_SYNC.w
 	move.b	_gfx_save_mode.l, GFX_MODE.w
+
 	rts
 
 ; ###################
@@ -109,6 +188,13 @@ _gfx_save_vbase_high:	.ds.b	1
 _gfx_save_vbase_mid:	.ds.b	1
 _gfx_save_sync:		.ds.b	1
 _gfx_save_mode:		.ds.b	1
+
+;_gfx_fb:		.ds.b	32255
+
 _gfx_save_palette:	.ds.w	16
 
 gfx_os_fb:	.ds.l	1
+;gfx_demo_fb:	.ds.l	1
+
+;gfx_fb_front:	.ds.l	1
+;gfx_fb_back:	.ds.l	1
