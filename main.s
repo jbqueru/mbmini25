@@ -63,17 +63,17 @@
 ; This file primarily contains the interactions with the host OS,
 ; saving the state of the machine and restoring it at the end.
 
-; #####################
-; #####################
-; ###               ###
-; ###  Boilerplate  ###
-; ###               ###
-; #####################
-; #####################
+; ###############################
+; ###############################
+; ###                         ###
+; ###  Front-end boilerplate  ###
+; ###                         ###
+; ###############################
+; ###############################
 
-	.68000
-	.include	"defines.s"	; Start with the ST defines
-	.include	"params.s"	; Add the global parameters
+	.68000				; The best. Maybe. At least, the best for Atari ST.
+	.include	"defines.s"	; ST hardware/OS defines
+	.include	"params.s"	; Parameters for the demo
 
 	.bss
 _MainBssStart:				; Beginning of the BSS - clear starting from that address
@@ -88,12 +88,21 @@ _MainBssStart:				; Beginning of the BSS - clear starting from that address
 ; ########################################
 ; ########################################
 
+; Invoking a supervisor subroutine is good enough for us here, since we won't
+; make any system calls.
+
 MainUser:
+; **********************************
+; ** Invoke supervisor subroutine **
+; **********************************
 	pea.l	.MainSuper.l
 	move.w	#XBIOS_SUPEXEC, -(sp)
 	trap	#XBIOS_TRAP
 	addq.l	#6, sp
 
+; *********************
+; ** Exit back to OS **
+***********************
 	move.w	#GEMDOS_TERM0, -(sp)
 	trap	#GEMDOS_TRAP
 
@@ -106,18 +115,33 @@ MainUser:
 ; ############################################
 
 .MainSuper:
-	bsr.s	MainBSSClear
-	bsr.s	IrqStackSetup
-	bsr.w	MfpSetup
-	bsr.w	PsgSetup
-	bsr.w	GfxSetup
 
+; *************************************
+; ** Save and prepare hardware state **
+; *************************************
+;	bsr.s	MainBSSClear
+	bsr.s	IrqStackSetup		; Get interrupts off first, so that the hardware doesn't change under our feet
+	bsr.w	MfpSetup		; Get MFP off, so that we don't get surprises when we turn interrupts back on
+	bsr.w	PsgSetup		; Deal with the audio first, because that doesn't require to wait
+	bsr.w	GfxSetup		; Do graphics last, since that requires interrupts to be on
+
+; **********************************
+; ** Invoke the heart of the demo **
+; **********************************
 	bsr.w	MM24Entry
 
+; ****************************
+; ** Restore hardware state **
+; ****************************
+; All in reverse order from the way it was saved
 	bsr.w	GfxReset
 	bsr.w	PsgReset
 	bsr.w	MfpReset
 	bsr.s	IrqStackReset
+
+; ***********************
+; ** Back to user mode **
+; ***********************
 	rts
 
 ; ###################
@@ -137,26 +161,26 @@ MainBSSClear:
 	bne.s	.Loop
 	rts
 
-; #########################
-; #########################
-; ###                   ###
-; ###  Include helpers  ###
-; ###                   ###
-; #########################
-; #########################
+; ##########################
+; ##########################
+; ###                    ###
+; ###  Hardware helpers  ###
+; ###                    ###
+; ##########################
+; ##########################
 
 	.include	"irqstack.s"
 	.include	"mfp.s"
 	.include	"gfx.s"
 	.include	"psg.s"
 
-; ###########################
-; ###########################
-; ###                     ###
-; ###  Include main code  ###
-; ###                     ###
-; ###########################
-; ###########################
+; ########################
+; ########################
+; ###                  ###
+; ###  Main demo code  ###
+; ###                  ###
+; ########################
+; ########################
 
 	.include	"mbmini24.s"	; The demo's main code
 
