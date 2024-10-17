@@ -72,6 +72,13 @@ GfxSetup:
 	move.b	d0,_gfx_save_vbase_mid.l
 	lsl.l	#8, d0
 	move.l	d0, gfx_os_fb
+	move.l	d0, gfx_fb_front
+
+; Prepare second framebuffer
+	move.l	#_gfx_fb + 255, d0
+	clr.b	d0
+	move.l	d0, gfx_demo_fb
+	move.l	d0, gfx_fb_back
 
 ; Save other graphics registers
 	move.b	GFX_SYNC.w, _gfx_save_sync.l
@@ -189,12 +196,12 @@ _gfx_save_vbase_mid:	.ds.b	1
 _gfx_save_sync:		.ds.b	1
 _gfx_save_mode:		.ds.b	1
 
-;_gfx_fb:		.ds.b	32255
+_gfx_fb:		.ds.b	32255
 
 _gfx_save_palette:	.ds.w	16
 
 gfx_os_fb:	.ds.l	1
-;gfx_demo_fb:	.ds.l	1
+gfx_demo_fb:	.ds.l	1
 
-;gfx_fb_front:	.ds.l	1
-;gfx_fb_back:	.ds.l	1
+gfx_fb_front:	.ds.l	1
+gfx_fb_back:	.ds.l	1
