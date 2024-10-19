@@ -47,8 +47,6 @@ Intro:
 
 	movem.l	intro_palette.l, d0-d7
 	movem.l	d0-d7, GFX_PALETTE.w
-	moveq.l	#0, d0
-	movea.l	gfx_os_fb.l, a0
 
 	move.l	#intro_music, intro_music_pointer.l
 	clr.b	intro_space_pressed.l
