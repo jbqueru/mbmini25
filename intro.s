@@ -84,7 +84,7 @@ Intro:
 	move.w	#2, BLIT_SRC_XINC.w
 	move.w	#2, BLIT_SRC_YINC.w
 
-	movea.l	gfx_os_fb, a0
+	movea.l	gfx_fb_back, a0
 	move.w	#8, BLIT_DST_XINC.w
 	move.w	#-118, BLIT_DST_YINC.w
 
@@ -124,7 +124,13 @@ Intro:
 	lea.l	160(a0), a0
 	dbra.w	d7, .BlitLine
 
-
+	move.l	gfx_fb_back.l, d0
+	move.l	gfx_fb_front.l, gfx_fb_back.l
+	move.l	d0, gfx_fb_front.l
+	lsr.w	#8, d0
+	move.b	d0, GFX_VBASE_MID.w
+	swap	d0
+	move.b	d0, GFX_VBASE_HIGH.w
 
 	cmpi.b	#$39, $fffffc02.w
 	bne.s	.UpDone
