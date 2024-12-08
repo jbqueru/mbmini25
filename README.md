@@ -1,7 +1,7 @@
-# MBMini24
+# MBMini25
 
-MB 2024 mini-megademo is a demo for Atari Mega ST by the
-MegaBuSTers, under development in 2024.
+MB 2025 mini-megademo is a demo for Atari Mega ST by the
+MegaBuSTers, under development in 2024/2025.
 
 The demo is planned to run on a wide variety of ST hardware,
 with the minimum hardware being a MegaST 1 (i.e. 1MB of RAM
@@ -71,7 +71,7 @@ logical or physical data connection to a device or network.
 
 Also, all of the code in this project is provided under a free
 and open source license, in a non-commercial manner. It is
-developed, maintained, and distributed openly. As of September
+developed, maintained, and distributed openly. As of December
 2024, no price has been charged for any of the code in this
 project, nor have any donations been accepted in connection
 with this project. The author has no intention of charging a

@@ -182,7 +182,7 @@ MainBSSClear:
 ; ########################
 ; ########################
 
-	.include	"mbmini24.s"	; The demo's main code
+	.include	"mbmini25.s"	; The demo's main code
 
 ; #####################
 ; #####################

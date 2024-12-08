@@ -30,19 +30,19 @@ mkdir -p out/tos
 cc convert_bitmaps.c -o out/bin/convert_bitmaps
 out/bin/convert_bitmaps
 
-rmac -s -p -4 main.s -o out/tos/MBMINI24.PRG
-chmod 664 out/tos/MBMINI24.PRG
+rmac -s -p -4 main.s -o out/tos/MBMINI25.PRG
+chmod 664 out/tos/MBMINI25.PRG
 
-rm -rf out/mbmini24
-mkdir -p out/mbmini24
-cp out/tos/MBMINI24.PRG out/mbmini24
-cp LICENSE LICENSE_ASSETS AGPL_DETAILS.md README.md out/mbmini24
-cp blank.msa out/mbmini24/mbmini24.msa
-git bundle create -q out/mbmini24/mbmini24.bundle HEAD main
+rm -rf out/mbmini25
+mkdir -p out/mbmini25
+cp out/tos/MBMINI25.PRG out/mbmini25
+cp LICENSE LICENSE_ASSETS AGPL_DETAILS.md README.md out/mbmini25
+cp blank.msa out/mbmini25/mbmini25.msa
+git bundle create -q out/mbmini25/mbmini25.bundle HEAD main
 
 rm -rf out/src
 mkdir -p out/src
 cp $(ls -1 | grep -v ^out\$) out/src
-(cd out && zip -9 -q mbmini24/src.zip src/*)
+(cd out && zip -9 -q mbmini25/src.zip src/*)
 
 echo Copy the executable to the floppy image before running makedist.sh!
