@@ -102,7 +102,7 @@ MainUser:
 
 ; *********************
 ; ** Exit back to OS **
-***********************
+; *********************
 	move.w	#GEMDOS_TERM0, -(sp)
 	trap	#GEMDOS_TRAP
 
