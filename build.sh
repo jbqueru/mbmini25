@@ -37,12 +37,17 @@ rm -rf out/mbmini25
 mkdir -p out/mbmini25
 cp out/tos/MBMINI25.PRG out/mbmini25
 cp LICENSE LICENSE_ASSETS AGPL_DETAILS.md README.md out/mbmini25
-cp blank.msa out/mbmini25/mbmini25.msa
 git bundle create -q out/mbmini25/mbmini25.bundle HEAD main
+
+hmsa out/mbmini25/mbmini25.st DS
+mcopy -i out/mbmini25/mbmini25.st out/tos/MBMINI25.PRG ::/
+hmsa out/mbmini25/mbmini25.st
 
 rm -rf out/src
 mkdir -p out/src
 cp $(ls -1 | grep -v ^out\$) out/src
 (cd out && zip -9 -q mbmini25/src.zip src/*)
 
-echo Copy the executable to the floppy image before running makedist.sh!
+rm -rf out/dist
+mkdir -p out/dist
+(cd out && zip -9 -q dist/mbmini25.zip mbmini25/*)
