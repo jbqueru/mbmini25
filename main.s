@@ -128,7 +128,7 @@ MainUser:
 ; **********************************
 ; ** Invoke the heart of the demo **
 ; **********************************
-	bsr.w	MM24Entry
+	bsr.w	MM25Entry
 
 ; ****************************
 ; ** Restore hardware state **

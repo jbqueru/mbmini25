@@ -25,7 +25,7 @@
 ; See main.s for more information
 
 	.text
-MM24Entry:
+MM25Entry:
 	move.w	#$2300, sr
 	jsr	Intro
 	jsr	Menu
