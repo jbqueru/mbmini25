@@ -24,13 +24,12 @@
 
 ; See main.s for more information
 
-	.text
+  .text
 MM25Entry:
-	move.w	#$2300, sr
-	jsr	Intro
-	jsr	Menu
+  move.w #$2300, sr
+  jsr Intro.l
+  jsr Menu.l
+  rts
 
-	rts
-
-	.include	"intro.s"
-	.include	"menu.s"
+  .include "intro.s"
+  .include "menu.s"
