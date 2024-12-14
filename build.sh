@@ -23,31 +23,51 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-mkdir -p out/bin
-mkdir -p out/inc
-mkdir -p out/tos
+echo '(*) create output directories'
+mkdir -p out/bin || exit $?
+mkdir -p out/inc || exit $?
+mkdir -p out/tos || exit $?
 
-cc convert_bitmaps.c -o out/bin/convert_bitmaps
-out/bin/convert_bitmaps
+echo '(*) convert bitmaps'
+cc convert_bitmaps.c -o out/bin/convert_bitmaps || exit $?
+out/bin/convert_bitmaps || exit $?
 
-rmac -s -p -4 main.s -o out/tos/MBMINI25.PRG
-chmod 664 out/tos/MBMINI25.PRG
+echo '(*) assemble code'
+rmac -s -p -4 main.s -o out/tos/MBMINI25.PRG || exit $?
 
-rm -rf out/mbmini25
-mkdir -p out/mbmini25
-cp out/tos/MBMINI25.PRG out/mbmini25
-cp LICENSE LICENSE_ASSETS AGPL_DETAILS.md README.md out/mbmini25
-git bundle create -q out/mbmini25/mbmini25.bundle HEAD main
+echo '(*) clear/create distribution directory'
+rm -rf out/mbmini25 || exit $?
+mkdir -p out/mbmini25 || exit $?
 
-hmsa out/mbmini25/mbmini25.st DS
-mcopy -i out/mbmini25/mbmini25.st out/tos/MBMINI25.PRG ::/
-hmsa out/mbmini25/mbmini25.st
+echo '(*) copy files to distribution directory'
+cp out/tos/MBMINI25.PRG out/mbmini25 || exit $?
+cp LICENSE LICENSE_ASSETS AGPL_DETAILS.md README.md out/mbmini25 || exit $?
 
-rm -rf out/src
-mkdir -p out/src
-cp $(ls -1 | grep -v ^out\$) out/src
-(cd out && zip -9 -q mbmini25/src.zip src/*)
+if [ -d .git ]
+then
+  echo '(*) prepare git bundle'
+  git bundle create -q out/mbmini25/mbmini25.gitbundle --branches --tags HEAD || exit $?
+else
+  echo '(*) NO GIT DIRECTORY FOUND, BUNDLE NOT CREATED'
+fi
 
-rm -rf out/dist
-mkdir -p out/dist
-(cd out && zip -9 -q dist/mbmini25.zip mbmini25/*)
+echo '(*) prepare disk images'
+# Create dual-sided disk image
+hmsa out/mbmini25/mbmini25.st DS || exit $?
+# .st files are plain FAT12 images, they can be manipulated with mtools,
+mcopy -i out/mbmini25/mbmini25.st out/tos/MBMINI25.PRG ::/ || exit $?
+# Create a .msa version of the image, which is smaller
+# Ignore status code for now, hmsa returns it wrong
+hmsa out/mbmini25/mbmini25.st # || exit $?
+
+echo '(*) prepare source archive'
+rm -rf out/src || exit $?
+mkdir -p out/src || exit $?
+cp $(ls -1 | grep -v ^out\$) out/src || exit $?
+(cd out && zip -r -9 -q mbmini25/src.zip src) || exit $?
+
+echo '(*) prepare final distribution archive'
+rm -rf out/mbmini25.zip || exit $?
+(cd out && zip -r -9 -q mbmini25.zip mbmini25) || exit $?
+
+echo '(*) BUILD SUCCESSFUL'
