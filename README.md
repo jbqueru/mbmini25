@@ -23,10 +23,11 @@ if you extract non-code assets from the demo or its source tree,
 and an `AGPL_DETAILS.md` file to explain the original author's
 intentions for compliance with the AGPL license.
 
-The demo itself is provided under 4 forms in the package:
+The demo itself is provided under 5 forms in the package:
 * A naked `MBMINI25.PRG` file meant to be executed e.g. from with
 an emulator with GEMDOS hard drive emulation.
 * A `mbmini25.msa` floppy image.
+* A `mbmini25.st` floppy image.
 * A copy of the source tree `src.zip` that was used to compile
 the demo.
 * The full source history as a git bundle `mbmini25.bundle` which
